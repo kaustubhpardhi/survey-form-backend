@@ -1,9 +1,11 @@
 const Form = require("../Models/form.model");
 const mongoose = require("mongoose");
+const uploadImage = require("../uploadImage.js");
 
 const formController = {
   saveForm: async (req, res) => {
     try {
+      const url = await uploadImage(req.body.base64);
       const form = new Form({
         ownerName: req.body.ownerName,
         shopOwner: req.body.shopOwnerName,
@@ -24,6 +26,7 @@ const formController = {
         license: req.body.license,
         fse: req.body.fse,
         latlong: req.body.latlong,
+        url: url,
       });
 
       const savedForm = await form.save();

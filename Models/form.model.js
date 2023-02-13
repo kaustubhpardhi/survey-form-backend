@@ -59,6 +59,9 @@ const formSchema = new mongoose.Schema(
     latlong: {
       type: String,
     },
+    url: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
