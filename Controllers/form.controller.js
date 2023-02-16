@@ -61,6 +61,50 @@ const formController = {
       res.status(400).send({ message: e.message });
     }
   },
+  getFormsCount: async (req, res) => {
+    try {
+      const forms = await Form.find({});
+      const totalforms = forms.length;
+      if (!totalforms) {
+        return res.status(400).send({ message: "No Form Entries Found" });
+      }
+      return res.status(200).send({ totalforms });
+    } catch (error) {
+      res.status(200).send({ error: error });
+    }
+  },
+
+  getFormEntriesForToday: async (req, res) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date();
+    tomorrow.setHours(24, 0, 0, 0);
+
+    try {
+      const formEntries = await Form.find({
+        createdAt: {
+          $gte: today,
+          $lt: tomorrow,
+        },
+      });
+      const count = formEntries.length;
+      res.status(200).send({ count });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+  getFormEntriesByWard: async (req, res) => {
+    const zone = req.body.zone;
+    try {
+      const forms = await Form.find({ zone: zone });
+      const totalforms = forms.length;
+      res.status(200).send({ totalforms });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ Error: "Internal Server Error " });
+    }
+  },
 };
 
 module.exports = formController;
