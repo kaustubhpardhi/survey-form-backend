@@ -1,10 +1,14 @@
 // install express with `npm install express`
 const express = require("express");
 const app = express();
+const server = require("http").createServer(app);
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+
+server.setTimeout(300000);
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
 // app.use(bodyParser.urlencoded({ extended: false }));

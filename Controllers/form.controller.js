@@ -6,6 +6,11 @@ const formController = {
   saveForm: async (req, res) => {
     try {
       const url = await uploadImage(req.body.base64);
+
+      if (!url) {
+        console.log("failed");
+        return res.status(400).send({ error: "Image upload failed" });
+      }
       const form = new Form({
         ownerName: req.body.ownerName,
         shopOwner: req.body.shopOwnerName,
@@ -103,6 +108,19 @@ const formController = {
     } catch (error) {
       console.log(error);
       res.status(500).send({ Error: "Internal Server Error " });
+    }
+  },
+  getformsfse: async (req, res) => {
+    try {
+      const fse = req.body.fse;
+      const forms = await Form.find({
+        fse: { $regex: new RegExp(fse, "i") },
+      });
+      const totalforms = forms.length;
+      res.status(200).send({ totalforms });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   },
 };

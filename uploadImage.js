@@ -1,4 +1,4 @@
-var cloudinary = require("cloudinary").v2;
+const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
   cloud_name: "dsisgnblg",
@@ -14,11 +14,16 @@ const opts = {
 
 module.exports = async (image) => {
   try {
-    const result = await cloudinary.uploader.upload(image, opts);
+    const result = await cloudinary.uploader.upload(image, {
+      ...opts,
+      timeout: 300000,
+    });
+    console.log(`result - ${result}`);
     console.log(result.secure_url);
     return result.secure_url;
   } catch (error) {
-    console.log(error.message);
+    console.log(`Error -${error}`);
+    console.log(error);
     throw { message: error.message };
   }
 };
