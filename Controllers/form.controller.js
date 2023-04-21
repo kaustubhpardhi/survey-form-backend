@@ -1,6 +1,8 @@
 const Form = require("../Models/form.model");
 const mongoose = require("mongoose");
 const uploadImage = require("../uploadImage.js");
+const getAllForms = require("../getAllForms");
+const redisClient = require("../Config/redis.config");
 
 const formController = {
   saveForm: async (req, res) => {
@@ -32,6 +34,7 @@ const formController = {
         fse: req.body.fse,
         latlong: req.body.latlong,
         url: url,
+        surveyor: req.body.surveyor,
       });
 
       const savedForm = await form.save();
@@ -43,14 +46,27 @@ const formController = {
     }
   },
   getForms: async (req, res) => {
+    let results;
+    let isCached = false;
+
     try {
       const { page, count } = req.body;
-      const packages = await Form.find({})
-        .skip((page - 1) * count)
-        .limit(count)
-        .sort({ createdAt: -1 })
-        .exec();
-      res.status(200).send({ packages });
+      const cacheResults = await redisClient.get("forms");
+      if (cacheResults) {
+        isCached = true;
+        results = JSON.parse(cacheResults);
+      } else {
+        results = await getAllForms(page, count);
+        console.log("hit redis");
+        await redisClient.set("forms", JSON.stringify(results), {
+          EX: 1800,
+          NX: true,
+        });
+      }
+      res.send({
+        fromCache: isCached,
+        data: results,
+      });
     } catch (err) {
       console.log(err);
       res.status(400).send({ message: err.message });

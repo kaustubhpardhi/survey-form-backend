@@ -1,21 +1,27 @@
-// install express with `npm install express`
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser"); 
+const redisClient = require("./Config/redis.config");
+
+(async () => {
+  await redisClient.connect();
+})();
+redisClient.on("ready", () => {
+  console.log("connected to redis cache");
+});
 
 server.setTimeout(300000);
-
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 app.use("/form", require("./Routes/form.routes"));
+app.use("/surveyor", require("./Routes/auth.routes"));
+app.use("/tracking", require("./Routes/surveyor.routes"));
 const uri =
   "mongodb://kaustubh:kaustubh786@ac-5xhog3b-shard-00-00.1ct2btc.mongodb.net:27017,ac-5xhog3b-shard-00-01.1ct2btc.mongodb.net:27017,ac-5xhog3b-shard-00-02.1ct2btc.mongodb.net:27017/?ssl=true&replicaSet=atlas-ove0jr-shard-0&authSource=admin&retryWrites=true&w=majority";
 mongoose.connect(
@@ -26,7 +32,7 @@ mongoose.connect(
   },
   (err) => {
     if (err) throw err;
-    console.log("Connected to MongoDB");
+    console.log("connected to mongodb");
   }
 );
 // app.get("/", (req, res) => res.send("Hello World!"));
@@ -37,7 +43,7 @@ app.use("/", (req, res, next) => {
 
 const PORT = 8081;
 app.listen(PORT, () => {
-  console.log(`Server is Runnig at Port Number:${PORT}`);
+  console.log(`server is running on port number:${PORT}`);
 });
 
 // app.get("/", (req, res) => res.send("Hello World!"));

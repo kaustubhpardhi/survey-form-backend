@@ -1,0 +1,18 @@
+ let results;
+    let isCached = false;
+
+    try {
+      const { page, count } = req.body;
+      const cacheResults = await redisClient.get("forms");
+      if (cacheResults) {
+        isCached = true;
+        results = JSON.parse(cacheResults);
+      } else {
+        results = await getAllForms(page, count);
+        await redisClient.set("forms", JSON.stringify(results));
+      }
+      res.send({
+        fromCache: isCached,
+        data: results,
+      });
+    }
