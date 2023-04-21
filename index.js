@@ -4,12 +4,9 @@ const server = require("http").createServer(app);
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser"); 
+const bodyParser = require("body-parser");
 const redisClient = require("./Config/redis.config");
 
-(async () => {
-  await redisClient.connect();
-})();
 redisClient.on("ready", () => {
   console.log("connected to redis cache");
 });
