@@ -2,7 +2,7 @@ const redis = require("redis");
 
 // Create a Redis client instance
 const redisClient = redis.createClient({
-  host: "redis-server",
+  host: "https://surveyformbackend-98c8.onrender.com",
   port: 6379,
 });
 
