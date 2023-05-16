@@ -139,6 +139,16 @@ const formController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+  getTotalCount : async (req,res)=>{
+    try{
+
+    }
+    catch(error)
+    {
+
+      
+    }
+  }
 };
 
 module.exports = formController;
