@@ -65,6 +65,9 @@ const formSchema = new mongoose.Schema(
     surveyor: {
       type: String,
     },
+    area: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

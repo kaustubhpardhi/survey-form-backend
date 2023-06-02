@@ -19,7 +19,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-  res.header("X-Frame-Options", "SAMEORIGIN");
+  res.header("X-Frame-Options", "DENY");
   next();
 });
 

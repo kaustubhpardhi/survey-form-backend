@@ -28,8 +28,9 @@ const formController = {
         since: req.body.since,
         employees: req.body.employees,
         size: req.body.size,
-        zone: req.body.zone,
-        ward: req.body.ward,
+        zone: req.body.selectedZone,
+        ward: req.body.selectedWard,
+        area: req.body.selectedArea,
         license: req.body.license,
         fse: req.body.fse,
         latlong: req.body.latlong,
@@ -139,16 +140,10 @@ const formController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
-  getTotalCount : async (req,res)=>{
-    try{
-
-    }
-    catch(error)
-    {
-
-      
-    }
-  }
+  getTotalCount: async (req, res) => {
+    try {
+    } catch (error) {}
+  },
 };
 
 module.exports = formController;
